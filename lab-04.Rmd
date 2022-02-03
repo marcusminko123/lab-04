@@ -20,7 +20,7 @@ states <- read_csv("data/states.csv")
 
 ### Exercise 1
 
-```{r dataset}
+```{r dataset-dennys}
 
 nrow(dennys)
 ncol(dennys)
@@ -28,20 +28,46 @@ ncol(dennys)
 glimpse(dennys)
 
 ```
+each row is a particular Denny's location, and the variables are address, city, state, zipcode, longitude, and latitude for each restaurant.
 
 ### Exercise 2
 
-Remove this text, and add your answer for Exercise 2 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+```{r dataset-laquinta}
+nrow(dennys)
+ncol(dennys)
+
+glimpse(dennys)
+```
+
+same dataset except for laquinta locations
+
+there are 17 non-US locations
+
+you could figure out which locations were not in the us by the state variable, perhaps. Or maybe with the GPS coordinates.
 
 ### Exercise 3
-
+```{r mutate-dennys-US}
+dennys %>% 
+     filter(!(state %in% states$abbreviation))
+     
+dennys %>% 
+     mutate(country = "United States")     
+```
 ...
 
 ### Exercise 4
+``` {r mutate-lq-country}
 
+lq <- laquinta %>%
+               mutate(country = case_when(
+                   state %in% state.abb     ~ "United States",
+                   state %in% c("ON", "BC") ~ "Canada",
+                   state == "ANT"           ~ "Colombia", 
+                   state == "FM" ~ "Honduras", 
+                   state %in% c("AG", "CH", "QR", "PU", "SL", "VE") ~ "Mexico"
+               ))
+glimpse(lq)
+```
 ...
 
 ### Exercise 5
