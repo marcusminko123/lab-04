@@ -1,7 +1,7 @@
 ---
 title: "Lab 04 - La Quinta is Spanish for next to Denny's, Pt. 1"
-author: "Insert your name here"
-date: "Insert date here"
+author: "Marcus Minko"
+date: "02-02-2022"
 output: github_document
 ---
 
@@ -9,19 +9,25 @@ output: github_document
 
 ```{r load-packages, message = FALSE}
 library(tidyverse) 
-library(dsbox) 
+library(dsbox)
+ 
 ```
 
 ```{r load-data, message = FALSE}
 states <- read_csv("data/states.csv")
+
 ```
 
 ### Exercise 1
 
-Remove this text, and add your answer for Exercise 1 here.
-Add code chunks as needed.
-Don't forget to label your code chunk.
-Do not use spaces in code chunk labels.
+```{r dataset}
+
+nrow(dennys)
+ncol(dennys)
+
+glimpse(dennys)
+
+```
 
 ### Exercise 2
 
