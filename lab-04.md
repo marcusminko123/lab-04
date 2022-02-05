@@ -91,24 +91,21 @@ dennys %>%
     ## #   longitude <dbl>, latitude <dbl>
 
 ``` r
-dennys %>% 
-     mutate(country = "United States")     
+dn <- dennys %>% 
+     mutate(country = "United States")  
+
+glimpse(dn)
 ```
 
-    ## # A tibble: 1,643 × 7
-    ##    address                        city    state zip   longitude latitude country
-    ##    <chr>                          <chr>   <chr> <chr>     <dbl>    <dbl> <chr>  
-    ##  1 2900 Denali                    Anchor… AK    99503    -150.      61.2 United…
-    ##  2 3850 Debarr Road               Anchor… AK    99508    -150.      61.2 United…
-    ##  3 1929 Airport Way               Fairba… AK    99701    -148.      64.8 United…
-    ##  4 230 Connector Dr               Auburn  AL    36849     -85.5     32.6 United…
-    ##  5 224 Daniel Payne Drive N       Birmin… AL    35207     -86.8     33.6 United…
-    ##  6 900 16th St S, Commons on Gree Birmin… AL    35294     -86.8     33.5 United…
-    ##  7 5931 Alabama Highway, #157     Cullman AL    35056     -86.9     34.2 United…
-    ##  8 2190 Ross Clark Circle         Dothan  AL    36301     -85.4     31.2 United…
-    ##  9 900 Tyson Rd                   Hope H… AL    36043     -86.4     32.2 United…
-    ## 10 4874 University Drive          Huntsv… AL    35816     -86.7     34.7 United…
-    ## # … with 1,633 more rows
+    ## Rows: 1,643
+    ## Columns: 7
+    ## $ address   <chr> "2900 Denali", "3850 Debarr Road", "1929 Airport Way", "230 …
+    ## $ city      <chr> "Anchorage", "Anchorage", "Fairbanks", "Auburn", "Birmingham…
+    ## $ state     <chr> "AK", "AK", "AK", "AL", "AL", "AL", "AL", "AL", "AL", "AL", …
+    ## $ zip       <chr> "99503", "99508", "99701", "36849", "35207", "35294", "35056…
+    ## $ longitude <dbl> -149.8767, -149.8090, -147.7600, -85.4681, -86.8317, -86.803…
+    ## $ latitude  <dbl> 61.1953, 61.2097, 64.8366, 32.6033, 33.5615, 33.5007, 34.206…
+    ## $ country   <chr> "United States", "United States", "United States", "United S…
 
 …
 
@@ -140,9 +137,190 @@ glimpse(lq)
 
 ### Exercise 5
 
+``` r
+dn %>% 
+  count(state) %>%   
+    arrange(desc(n))
+```
+
+    ## # A tibble: 51 × 2
+    ##    state     n
+    ##    <chr> <int>
+    ##  1 CA      403
+    ##  2 TX      200
+    ##  3 FL      140
+    ##  4 AZ       83
+    ##  5 IL       56
+    ##  6 NY       56
+    ##  7 WA       49
+    ##  8 OH       44
+    ##  9 MO       42
+    ## 10 PA       40
+    ## # … with 41 more rows
+
+``` r
+dn %>% 
+  count(state) %>% 
+    arrange(n)
+```
+
+    ## # A tibble: 51 × 2
+    ##    state     n
+    ##    <chr> <int>
+    ##  1 DE        1
+    ##  2 DC        2
+    ##  3 VT        2
+    ##  4 AK        3
+    ##  5 IA        3
+    ##  6 NH        3
+    ##  7 SD        3
+    ##  8 WV        3
+    ##  9 LA        4
+    ## 10 MT        4
+    ## # … with 41 more rows
+
+Most - CA, Least- DE Not surprising given the respective sizes and
+population densities of these states
+
+``` r
+lq %>% 
+     count(state) %>%   
+     arrange(desc(n))
+```
+
+    ## # A tibble: 59 × 2
+    ##    state     n
+    ##    <chr> <int>
+    ##  1 TX      237
+    ##  2 FL       74
+    ##  3 CA       56
+    ##  4 GA       41
+    ##  5 TN       30
+    ##  6 OK       29
+    ##  7 LA       28
+    ##  8 CO       27
+    ##  9 NM       19
+    ## 10 NY       19
+    ## # … with 49 more rows
+
+``` r
+lq %>% 
+    filter(country == "United States") %>% 
+    count(state) %>%   
+     arrange(n)
+```
+
+    ## # A tibble: 48 × 2
+    ##    state     n
+    ##    <chr> <int>
+    ##  1 ME        1
+    ##  2 AK        2
+    ##  3 NH        2
+    ##  4 RI        2
+    ##  5 SD        2
+    ##  6 VT        2
+    ##  7 WV        3
+    ##  8 WY        3
+    ##  9 IA        4
+    ## 10 MI        4
+    ## # … with 38 more rows
+
+Most- TX, Least - ME Again, Not surprising given the respective sizes
+and population densities of these states
+
 …
 
 ### Exercise 6
+
+``` r
+dn %>%
+          count(state) %>%
+          inner_join(states, by = c("state" = "abbreviation")) %>% 
+          mutate(location_density = area/n) %>% 
+          arrange(location_density)
+```
+
+    ## # A tibble: 51 × 5
+    ##    state     n name                     area location_density
+    ##    <chr> <int> <chr>                   <dbl>            <dbl>
+    ##  1 DC        2 District of Columbia     68.3             34.2
+    ##  2 RI        5 Rhode Island           1545.             309. 
+    ##  3 CA      403 California           163695.             406. 
+    ##  4 CT       12 Connecticut            5543.             462. 
+    ##  5 FL      140 Florida               65758.             470. 
+    ##  6 MD       26 Maryland              12406.             477. 
+    ##  7 NJ       10 New Jersey             8723.             872. 
+    ##  8 NY       56 New York              54555.             974. 
+    ##  9 IN       37 Indiana               36420.             984. 
+    ## 10 OH       44 Ohio                  44826.            1019. 
+    ## # … with 41 more rows
+
+``` r
+lq %>%
+          count(state) %>%
+          inner_join(states, by = c("state" = "abbreviation")) %>% 
+          mutate(location_density = area/n) %>% 
+          arrange(location_density)
+```
+
+    ## # A tibble: 48 × 5
+    ##    state     n name             area location_density
+    ##    <chr> <int> <chr>           <dbl>            <dbl>
+    ##  1 RI        2 Rhode Island    1545.             772.
+    ##  2 FL       74 Florida        65758.             889.
+    ##  3 CT        6 Connecticut     5543.             924.
+    ##  4 MD       13 Maryland       12406.             954.
+    ##  5 TX      237 Texas         268596.            1133.
+    ##  6 TN       30 Tennessee      42144.            1405.
+    ##  7 GA       41 Georgia        59425.            1449.
+    ##  8 NJ        5 New Jersey      8723.            1745.
+    ##  9 MA        6 Massachusetts  10554.            1759.
+    ## 10 LA       28 Louisiana      52378.            1871.
+    ## # … with 38 more rows
+
+Denny’s- DC has the greatest density per square mile
+
+La Quinta- RI has greatest density per square mile
+
+### Exercise 7
+
+``` r
+dn <- dn %>%
+  mutate(establishment = "Denny's")
+lq <- lq %>%
+  mutate(establishment = "La Quinta")
+
+dn_lq <- bind_rows(dn, lq)
+
+ggplot(dn_lq, mapping = aes(x = longitude, y = latitude, color = establishment)) +
+  geom_point()
+```
+
+![](lab-04_files/figure-gfm/viz-data-1.png)<!-- -->
+
+``` r
+dn_lq %>% 
+  filter(state == "NC") %>% 
+ggplot(dn_lq, mapping = aes(x = longitude, y = latitude, color = establishment, alpha = .8)) + labs(title = "Denny's & La Quinta Locations", subtitle = "North Carolina") +
+  geom_point() 
+```
+
+![](lab-04_files/figure-gfm/viz-data-2.png)<!-- -->
+
+``` r
+# It does appear to be true that most La Quinta locations are close to Denny's locations in North Carolina.
+
+dn_lq %>% 
+  filter(state == "TX") %>% 
+ggplot(dn_lq, mapping = aes(x = longitude, y = latitude, color = establishment, alpha = .4)) + labs(title = "Denny's & La Quinta Locations", subtitle = "Texas") +
+  geom_point()
+```
+
+![](lab-04_files/figure-gfm/viz-data-3.png)<!-- -->
+
+``` r
+# It also appears to be true that most La Quinta locations are close to Denny's locations in Texas.
+```
 
 …
 

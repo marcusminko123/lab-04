@@ -50,8 +50,10 @@ you could figure out which locations were not in the us by the state variable, p
 dennys %>% 
      filter(!(state %in% states$abbreviation))
      
-dennys %>% 
-     mutate(country = "United States")     
+dn <- dennys %>% 
+     mutate(country = "United States")  
+
+glimpse(dn)
 ```
 ...
 
@@ -71,11 +73,80 @@ glimpse(lq)
 ...
 
 ### Exercise 5
+``` {r arrange-dennys-state}
+
+dn %>% 
+  count(state) %>%   
+    arrange(desc(n))
+
+dn %>% 
+  count(state) %>% 
+    arrange(n)
+```
+Most - CA, Least- DE Not surprising given the respective sizes and population densities of these states
+
+```{r arrange-laquinta-state}
+
+lq %>% 
+     count(state) %>%   
+     arrange(desc(n))
+
+lq %>% 
+    filter(country == "United States") %>% 
+    count(state) %>%   
+     arrange(n)
+```
+Most- TX, Least - ME Again, Not surprising given the respective sizes and population densities of these states
 
 ...
 
-### Exercise 6
 
+### Exercise 6
+``` {r location-density-by-state}
+dn %>%
+          count(state) %>%
+          inner_join(states, by = c("state" = "abbreviation")) %>% 
+          mutate(location_density = area/n) %>% 
+          arrange(location_density)
+
+lq %>%
+          count(state) %>%
+          inner_join(states, by = c("state" = "abbreviation")) %>% 
+          mutate(location_density = area/n) %>% 
+          arrange(location_density)
+```
+Denny's- DC has the greatest density per square mile
+
+La Quinta- RI has greatest density per square mile
+
+### Exercise 7
+``` {r viz-data}
+
+dn <- dn %>%
+  mutate(establishment = "Denny's")
+lq <- lq %>%
+  mutate(establishment = "La Quinta")
+
+dn_lq <- bind_rows(dn, lq)
+
+ggplot(dn_lq, mapping = aes(x = longitude, y = latitude, color = establishment)) +
+  geom_point()
+
+dn_lq %>% 
+  filter(state == "NC") %>% 
+ggplot(dn_lq, mapping = aes(x = longitude, y = latitude, color = establishment, alpha = .8)) + labs(title = "Denny's & La Quinta Locations", subtitle = "North Carolina") +
+  geom_point() 
+
+# It does appear to be true that most La Quinta locations are close to Denny's locations in North Carolina.
+
+dn_lq %>% 
+  filter(state == "TX") %>% 
+ggplot(dn_lq, mapping = aes(x = longitude, y = latitude, color = establishment, alpha = .4)) + labs(title = "Denny's & La Quinta Locations", subtitle = "Texas") +
+  geom_point()
+
+# It also appears to be true that most La Quinta locations are close to Denny's locations in Texas.
+
+```
 ...
 
  
